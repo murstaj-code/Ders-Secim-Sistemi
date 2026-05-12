@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.Bolum>
+
+@{
+    ViewBag.Title = "Bölüm Listesi";
+}
+
+<div class="container">
+    <h2>Bölüm Listesi</h2>
+    @Html.ActionLink("Yeni Bölüm Ekle", "BolumEkle", "Admin", null, new { @class = "btn btn-primary" })
+    <hr />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Bölüm Adı</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bolum in Model)
+            {
+                <tr>
+                    <td>@bolum.Id</td>
+                    <td>@bolum.Ad</td>
+                    <td>
+                        @Html.ActionLink("Sil", "BolumSil", "Admin", new { id = bolum.Id }, new { @class = "btn btn-danger btn-sm" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <hr />
+    @Html.ActionLink("Admin Paneline Dön", "Index", "Admin", null, new { @class = "btn btn-default" })
+</div>
+

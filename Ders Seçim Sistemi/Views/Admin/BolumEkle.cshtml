@@ -1,0 +1,19 @@
+﻿@model Ders_Seçim_Sistemi.Models.Entities.Bolum
+
+@{
+    ViewBag.Title = "Bölüm Ekle";
+}
+
+<div class="container">
+    <h2>Yeni Bölüm Ekle</h2>
+    <hr />
+    @using (Html.BeginForm("BolumEkle", "Admin", FormMethod.Post))
+    {
+        <div class="form-group">
+            <label>Bölüm Adı</label>
+            @Html.TextBoxFor(e => e.Ad, new { @class = "form-control" })
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        @Html.ActionLink("İptal", "BolumListesi", "Admin", null, new { @class = "btn btn-default" })
+    }
+</div>

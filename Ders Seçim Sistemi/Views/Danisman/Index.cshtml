@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Danışman Paneli";
+}
+
+<div class="container">
+    <h2>Hoş geldiniz, @Session["KullaniciAdi"]</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Öğrenci Listesi</div>
+                <div class="panel-body">
+                    @Html.ActionLink("Öğrencileri Görüntüle", "OgrenciListesi", "Danisman", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">Danışan Listesi</div>
+                <div class="panel-body">
+                    @Html.ActionLink("Danışanlarım", "DanisanListesi", "Danisman", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-warning">
+                <div class="panel-heading">Onay Paneli</div>
+                <div class="panel-body">
+                    @Html.ActionLink("Onay İşlemleri", "OnayPaneli", "Danisman", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    @Html.ActionLink("Çıkış Yap", "Logout", "Account", null, new { @class = "btn btn-danger" })
+</div>

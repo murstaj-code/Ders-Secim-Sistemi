@@ -1,0 +1,31 @@
+﻿@model Ders_Seçim_Sistemi.Models.Entities.Donem
+
+@{
+    ViewBag.Title = "Dönem Ekle";
+}
+
+<div class="container">
+    <h2>Yeni Dönem Ekle</h2>
+    <hr />
+    @using (Html.BeginForm("DonemEkle", "Admin", FormMethod.Post))
+    {
+        <div class="form-group">
+            <label>Dönem Adı</label>
+            @Html.TextBoxFor(m => m.Ad, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>Başlangıç Tarihi</label>
+            @Html.TextBoxFor(m => m.BaslangicTarihi, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group">
+            <label>Bitiş Tarihi</label>
+            @Html.TextBoxFor(m => m.BitisTarihi, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group">
+            <label>Aktif Mi?</label>
+            @Html.CheckBoxFor(m => m.AktifMi)
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        @Html.ActionLink("İptal", "DonemListesi", "Admin", null, new { @class = "btn btn-default" })
+    }
+</div>
