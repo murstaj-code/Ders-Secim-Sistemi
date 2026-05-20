@@ -1,0 +1,57 @@
+﻿@{@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.DersSecim>
+
+    ViewBag.Title = "Seçilen Dersler";
+}
+
+<div class="container">
+    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Seçilen Dersler</h2>
+    </div>
+    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
+        <thead>
+        <thead style="background-color: #0F172A; color: white;">
+            <tr>
+                <th>Ders Adı</th>
+                <th>Kredi</th>
+                <th>Gün</th>
+                <th>Saat</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var secim in Model)
+                {
+                    <tr>
+                        <td>@secim.Ders.Ad</td>
+                        <td>@secim.Ders.Kredi</td>
+                        <td>@secim.Ders.Gun</td>
+                        <td>@secim.Ders.SaatBaslangic - @secim.Ders.SaatBitis</td>
+                        <td>
+                            @if (secim.Durum == "Onaylandi")
+                            {
+                                <span style="color: green; font-weight: bold;">Onaylandı</span>
+                            }
+                            else if (secim.Durum == "Reddedildi")
+                            {
+                                <span style="color: red; font-weight: bold;">Reddedildi</span>
+                            }
+                            else
+                            {
+                                <span style="color: orange; font-weight: bold;">Bekliyor</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" style="text-align: center;">Henüz ders seçilmemiş.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.ActionLink("Panele Dön", "Index", "Ogrenci", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+</div>

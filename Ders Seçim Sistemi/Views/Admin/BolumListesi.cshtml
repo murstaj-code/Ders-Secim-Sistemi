@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.Bolum>
 
 @{
-    ViewBag.Title = "Bölüm Listesi";
+    ViewBag.Title = "Bölüm İşlemleri";
 }
 
 <div class="container">
-    <h2>Bölüm Listesi</h2>
-    @Html.ActionLink("Yeni Bölüm Ekle", "BolumEkle", "Admin", null, new { @class = "btn btn-primary" })
-    <hr />
-    <table class="table table-bordered">
+    <h2>Bölüm İşlemleri</h2>
+    @Html.ActionLink("Yeni Bölüm Ekle", "BolumEkle", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white; margin-top: 10px; margin-bottom: 10px;" })
+    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
         <thead>
+        <thead style="background-color: #0F172A; color: white;">
             <tr>
                 <th>Id</th>
                 <th>Bölüm Adı</th>
@@ -23,13 +23,16 @@
                     <td>@bolum.Id</td>
                     <td>@bolum.Ad</td>
                     <td>
-                        @Html.ActionLink("Sil", "BolumSil", "Admin", new { id = bolum.Id }, new { @class = "btn btn-danger btn-sm" })
+                        @Html.ActionLink("Sil", "BolumSil", "Admin", new { id = bolum.Id }, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <hr />
-    @Html.ActionLink("Admin Paneline Dön", "Index", "Admin", null, new { @class = "btn btn-default" })
+    @if (TempData["Hata"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Hata"]</div>
+    }
+    @Html.ActionLink("Admin Paneline Dön", "Index", "Admin", null, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
 </div>
 

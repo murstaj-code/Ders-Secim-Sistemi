@@ -3,35 +3,49 @@
 }
 
 <div class="container">
-    <h2>Hoş geldiniz, @Session["KullaniciAd"]</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Öğrenci İşlemleri</div>
-                <div class="panel-body">
-                    @Html.ActionLink("Öğrencileri Yönet", "Index", "Ogrenci", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-success">
-                <div class="panel-heading">Ders İşlemleri</div>
-                <div class="panel-body">
-                    @Html.ActionLink("Dersleri Yönet", "Index", "Ders", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-warning">
-                <div class="panel-heading">Dönem İşlemleri</div>
-                <div class="panel-body">
-                    @Html.ActionLink("Dönemleri Yönet", "Index", "Donem", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
-        </div>
+    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Hoş geldiniz, @Session["KullaniciAd"]</h2>
     </div>
-    <hr />
-    @Html.ActionLink("Çıkış Yap", "Logout", "Account", null, new { @class = "btn btn-danger" })
-</div>
 
+    <div class="row" style="margin: 0; margin-bottom: 20px;">
+        <div class="col-md-4" style="padding: 0; border: 2px solid #0F172A; border-radius: 8px 0 0 0;">
+
+            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 8px 10px; border-bottom: 2px solid #0F172A;">Öğrenci İşlemleri</p>
+            <div style="padding: 10px;">
+                @Html.ActionLink("Öğrencileri Yönet", "OgrenciListesi", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </div>
+        </div>
+
+        <div class="col-md-4" style="padding: 0; border: 2px solid #0F172A; border-left: none;">
+            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 8px 10px; border-bottom: 2px solid #0F172A;">Ders İşlemleri</p>
+            <div style="padding: 10px;">
+                @Html.ActionLink("Dersleri Yönet", "DersListesi", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </div>
+        </div>
+
+        <div class="col-md-4" style="padding: 0; border: 2px solid #0F172A; border-left: none; border-radius: 0 8px 0 0;">
+            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 8px 10px; border-bottom: 2px solid #0F172A;">Dönem İşlemleri</p>
+            <div style="padding: 10px;">
+                @Html.ActionLink("Dönemleri Yönet", "DonemListesi", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </div>
+        </div>
+
+        <div class="col-md-4" style="padding: 0; border: 2px solid #0F172A; border-top: none; border-radius: 0 0 0 8px;">
+            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 8px 10px; border-bottom: 2px solid #0F172A;">Danışman İşlemleri</p>
+            <div style="padding: 10px;">
+                @Html.ActionLink("Danışmanları Yönet", "DanismanListesi", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </div>
+        </div>
+
+        <div class="col-md-4" style="padding: 0; border: 2px solid #0F172A; border-top: none; border-left: none; border-radius: 0 0 8px 0;">
+            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 8px 10px; border-bottom: 2px solid #0F172A;">Bölüm İşlemleri</p>
+            <div style="padding: 10px;">
+                @Html.ActionLink("Bölümleri Yönet", "BolumListesi", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+    @Html.ActionLink("Çıkış Yap", "Logout", "Account", null, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
+</div>

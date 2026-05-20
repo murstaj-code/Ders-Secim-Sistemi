@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.Ogrenci>
+
+@{
+    ViewBag.Title = "Öğrenci Listesi";
+}
+
+<div class="container">
+    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Öğrenci Listesi</h2>
+    </div>
+
+    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
+        <thead style="background-color: #0F172A; color: white;">
+            <tr>
+                <th>Öğrenci No</th>
+                <th>Ad Soyad</th>
+                <th>Email</th>
+                <th>Bölüm</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var ogrenci in Model)
+                {
+                    <tr>
+                        <td>@ogrenci.OgrenciNo</td>
+                        <td>@(ogrenci.Kullanici != null ? ogrenci.Kullanici.Ad + " " + ogrenci.Kullanici.Soyad : "-")</td>
+                        <td>@(ogrenci.Kullanici != null ? ogrenci.Kullanici.Email : "-")</td>
+                        <td>@(ogrenci.Bolum != null ? ogrenci.Bolum.Ad : "-")</td>
+                        <td>
+                            @Html.ActionLink("Onay Paneli", "OnayPaneli", "Danisman", new { ogrenciId = ogrenci.Id }, new { @class = "btn btn-sm", style = "background-color: #0F172A; color: white;" })
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" style="text-align: center;">Henüz öğrenci bulunmamaktadır.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    @Html.ActionLink("Danışman Paneline Dön", "Index", "Danisman", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+</div>

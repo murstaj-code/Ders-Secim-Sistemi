@@ -8,7 +8,6 @@ using System.Web.Routing;
 using log4net;
 using log4net.Config;
 
-
 namespace Ders_Seçim_Sistemi
 {
     public class MvcApplication : System.Web.HttpApplication
@@ -19,6 +18,12 @@ namespace Ders_Seçim_Sistemi
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            var logPath = Server.MapPath("~/Logs");
+            if (!System.IO.Directory.Exists(logPath))
+                System.IO.Directory.CreateDirectory(logPath);
+
+            log4net.GlobalContext.Properties["LogPath"] = logPath;
             XmlConfigurator.Configure();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Ders_Seçim_Sistemi.Models.Entities;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -53,13 +54,24 @@ namespace Ders_Seçim_Sistemi.Controllers
                 return RedirectToAction("Login", "Account");
 
             var bolum = db.Bolumler.Find(id);
+
+            if (bolum == null)
+                return RedirectToAction("BolumListesi");
+
+            // Bölüme bağlı dersler var mı kontrol et
+            if (db.Dersler.Any(d => d.BolumId == id) || db.Ogrenciler.Any(o => o.BolumId == id))
+            {
+                TempData["Hata"] = "Bu bölüme bağlı dersler veya öğrenciler var, silinemez.";
+                return RedirectToAction("BolumListesi");
+            }
+
             db.Bolumler.Remove(bolum);
             db.SaveChanges();
             return RedirectToAction("BolumListesi");
         }
 
         // Dönem Listesi
-public ActionResult DonemListesi()
+        public ActionResult DonemListesi()
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
@@ -112,8 +124,8 @@ public ActionResult DonemListesi()
             db.SaveChanges();
             return RedirectToAction("DonemListesi");
         }
-            // Ders Listesi
-public ActionResult DersListesi()
+        // Ders Listesi
+        public ActionResult DersListesi()
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
@@ -129,7 +141,10 @@ public ActionResult DersListesi()
                 return RedirectToAction("Login", "Account");
 
             ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad");
-            ViewBag.DanismanId = new SelectList(db.Danismanlar.ToList(), "Id", "Id");
+            ViewBag.DanismanId = new SelectList(
+    db.Danismanlar.Include("Kullanici").ToList()
+    .Select(d => new { Id = d.Id, AdSoyad = d.Kullanici.Ad + " " + d.Kullanici.Soyad }),
+    "Id", "AdSoyad");
             return View();
         }
 
@@ -156,6 +171,88 @@ public ActionResult DersListesi()
             db.SaveChanges();
             return RedirectToAction("DersListesi");
         }
+        // Danışman Güncelle - GET
+        public ActionResult DanismanGuncelle(int id)
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+                return RedirectToAction("Login", "Account");
+
+            var danisman = db.Danismanlar.Include("Kullanici").FirstOrDefault(d => d.Id == id);
+            if (danisman == null)
+                return RedirectToAction("DanismanListesi");
+
+            ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad", danisman.BolumId);
+            return View(danisman);
+        }
+
+        // Danışman Güncelle - POST
+        [HttpPost]
+        public ActionResult DanismanGuncelle(int id, string Ad, string Soyad, string Email, string Parola, int? BolumId)
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+                return RedirectToAction("Login", "Account");
+
+            if (BolumId == null)
+            {
+                TempData["Hata"] = "Lütfen tüm alanları doldurunuz.";
+                return RedirectToAction("DanismanGuncelle", new { id = id });
+            }
+
+            var danisman = db.Danismanlar.Include("Kullanici").FirstOrDefault(d => d.Id == id);
+            danisman.Kullanici.Ad = Ad;
+            danisman.Kullanici.Soyad = Soyad;
+            danisman.Kullanici.Email = Email;
+            if (!string.IsNullOrEmpty(Parola))
+                danisman.Kullanici.Parola = Parola;
+            danisman.BolumId = (int)BolumId;
+
+            db.SaveChanges();
+            return RedirectToAction("DanismanListesi");
+        }
+        // Ders Güncelle - GET
+        public ActionResult DersGuncelle(int id)
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+                return RedirectToAction("Login", "Account");
+
+            var ders = db.Dersler.Find(id);
+            if (ders == null)
+                return RedirectToAction("DersListesi");
+
+            ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad", ders.BolumId);
+            ViewBag.DanismanId = new SelectList(
+                db.Danismanlar.Include("Kullanici").ToList()
+                .Select(d => new { Id = d.Id, AdSoyad = d.Kullanici.Ad + " " + d.Kullanici.Soyad }),
+                "Id", "AdSoyad", ders.DanismanId);
+            return View(ders);
+        }
+
+        // Ders Güncelle - POST
+       [HttpPost]
+public ActionResult DersGuncelle(int id, string Ad, int? Kredi, int? Kontenjan, int? BolumId, int? DanismanId, string Gun, TimeSpan SaatBaslangic, TimeSpan SaatBitis)
+{
+    if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+        return RedirectToAction("Login", "Account");
+
+    if (BolumId == null || DanismanId == null || string.IsNullOrEmpty(Gun))
+    {
+        TempData["Hata"] = "Lütfen tüm alanları doldurunuz.";
+        return RedirectToAction("DersGuncelle", new { id = id });
+    }
+
+    var ders = db.Dersler.Find(id);
+    ders.Ad = Ad;
+    ders.Kredi = (int)Kredi;
+    ders.Kontenjan = (int)Kontenjan;
+    ders.BolumId = (int)BolumId;
+    ders.DanismanId = (int)DanismanId;
+    ders.Gun = Gun;
+    ders.SaatBaslangic = SaatBaslangic;
+    ders.SaatBitis = SaatBitis;
+
+    db.SaveChanges();
+    return RedirectToAction("DersListesi");
+}
 
         // Danışman Listesi
         public ActionResult DanismanListesi()
@@ -179,10 +276,17 @@ public ActionResult DersListesi()
 
         // Danışman Ekle - POST
         [HttpPost]
-        public ActionResult DanismanEkle(Kullanici kullanici, int BolumId)
+        public ActionResult DanismanEkle(Kullanici kullanici, int? BolumId)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
+
+            if (BolumId == null)
+            {
+                TempData["Hata"] = "Lütfen bölüm seçiniz.";
+                ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad");
+                return View(kullanici);
+            }
 
             kullanici.Rol = "Danisman";
             db.Kullanicilar.Add(kullanici);
@@ -194,19 +298,33 @@ public ActionResult DersListesi()
 
             return RedirectToAction("DanismanListesi");
         }
-
         // Danışman Sil
         public ActionResult DanismanSil(int id)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
 
+            // Bağlı ders var mı kontrol et
+            if (db.Dersler.Any(d => d.DanismanId == id))
+            {
+                TempData["Hata"] = "Bu danışmana bağlı dersler var, önce dersleri silin.";
+                return RedirectToAction("DanismanListesi");
+            }
+
+            // Bağlı öğrenci var mı kontrol et
+            if (db.Ogrenciler.Any(o => o.DanismanId == id))
+            {
+                TempData["Hata"] = "Bu danışmana bağlı öğrenciler var, önce öğrencileri silin.";
+                return RedirectToAction("DanismanListesi");
+            }
+
             var danisman = db.Danismanlar.Find(id);
+            var kullanici = db.Kullanicilar.Find(danisman.KullaniciId);
             db.Danismanlar.Remove(danisman);
+            db.Kullanicilar.Remove(kullanici);
             db.SaveChanges();
             return RedirectToAction("DanismanListesi");
         }
-
         // Öğrenci Listesi
         public ActionResult OgrenciListesi()
         {
@@ -224,7 +342,10 @@ public ActionResult DersListesi()
                 return RedirectToAction("Login", "Account");
 
             ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad");
-            ViewBag.DanismanId = new SelectList(db.Danismanlar.Include("Kullanici").ToList(), "Id", "Id");
+            ViewBag.DanismanId = new SelectList(
+    db.Danismanlar.Include("Kullanici").ToList()
+    .Select(d => new { Id = d.Id, AdSoyad = d.Kullanici.Ad + " " + d.Kullanici.Soyad }),
+    "Id", "AdSoyad");
             return View();
         }
 
@@ -258,13 +379,65 @@ public ActionResult DersListesi()
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
 
+            // Önce öğrencinin ders seçimlerini sil
+            var secimler = db.DersSecimler.Where(s => s.OgrenciId == id).ToList();
+            db.DersSecimler.RemoveRange(secimler);
+
+            // Sonra öğrenciyi sil
             var ogrenci = db.Ogrenciler.Find(id);
+            var kullanici = db.Kullanicilar.Find(ogrenci.KullaniciId);
             db.Ogrenciler.Remove(ogrenci);
+            db.Kullanicilar.Remove(kullanici);
+
+            db.SaveChanges();
+            return RedirectToAction("OgrenciListesi");
+        }
+        // Öğrenci Güncelle - GET
+        public ActionResult OgrenciGuncelle(int id)
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+                return RedirectToAction("Login", "Account");
+
+            var ogrenci = db.Ogrenciler.Include("Kullanici").FirstOrDefault(o => o.Id == id);
+            if (ogrenci == null)
+                return RedirectToAction("OgrenciListesi");
+
+            ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad", ogrenci.BolumId);
+            ViewBag.DanismanId = new SelectList(
+                db.Danismanlar.Include("Kullanici").ToList()
+                .Select(d => new { Id = d.Id, AdSoyad = d.Kullanici.Ad + " " + d.Kullanici.Soyad }),
+                "Id", "AdSoyad", ogrenci.DanismanId);
+
+            return View(ogrenci);
+        }
+
+        // Öğrenci Güncelle - POST
+        [HttpPost]
+        public ActionResult OgrenciGuncelle(int id, string Ad, string Soyad, string Email, string Parola, int? BolumId, int? DanismanId, string OgrenciNo)
+        {
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+                return RedirectToAction("Login", "Account");
+
+            if (BolumId == null || DanismanId == null)
+            {
+                TempData["Hata"] = "Lütfen tüm alanları doldurunuz.";
+                return RedirectToAction("OgrenciGuncelle", new { id = id });
+            }
+
+            var ogrenci = db.Ogrenciler.Include("Kullanici").FirstOrDefault(o => o.Id == id);
+            ogrenci.Kullanici.Ad = Ad;
+            ogrenci.Kullanici.Soyad = Soyad;
+            ogrenci.Kullanici.Email = Email;
+            if (!string.IsNullOrEmpty(Parola))
+                ogrenci.Kullanici.Parola = Parola;
+            ogrenci.OgrenciNo = OgrenciNo;
+            ogrenci.BolumId = (int)BolumId;
+            ogrenci.DanismanId = (int)DanismanId;
+
             db.SaveChanges();
             return RedirectToAction("OgrenciListesi");
         }
     }
-
 }
 
 

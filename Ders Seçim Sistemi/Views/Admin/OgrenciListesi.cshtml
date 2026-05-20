@@ -1,7 +1,42 @@
-﻿
+﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.Ogrenci>
+
 @{
-    ViewBag.Title = "OgrenciListesi";
+    ViewBag.Title = "Öğrenci İşlemleri";
 }
 
-<h2>OgrenciListesi</h2>
-
+<div class="container">
+    <h2>Öğrenci İşlemleri</h2>
+    @Html.ActionLink("Yeni Öğrenci Ekle", "OgrenciEkle", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white; margin-top: 10px; margin-bottom: 10px;" })
+    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
+        <thead>
+        <thead style="background-color: #0F172A; color: white;">
+            <tr>
+                <th>Id</th>
+                <th>Öğrenci No</th>
+                <th>Ad Soyad</th>
+                <th>Email</th>
+                <th>Bölüm</th>
+                <th>Danışman</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ogrenci in Model)
+            {
+                <tr>
+                    <td>@ogrenci.Id</td>
+                    <td>@ogrenci.OgrenciNo</td>
+                    <td>@(ogrenci.Kullanici != null ? ogrenci.Kullanici.Ad + " " + ogrenci.Kullanici.Soyad : "-")</td>
+                    <td>@(ogrenci.Kullanici != null ? ogrenci.Kullanici.Email : "-")</td>
+                    <td>@(ogrenci.Bolum != null ? ogrenci.Bolum.Ad : "-")</td>
+                    <td>@(ogrenci.Danisman != null && ogrenci.Danisman.Kullanici != null ? ogrenci.Danisman.Kullanici.Ad + " " + ogrenci.Danisman.Kullanici.Soyad : "-")</td>
+                    <td>
+                        @Html.ActionLink("Güncelle", "OgrenciGuncelle", "Admin", new { id = ogrenci.Id }, new { @class = "btn btn-sm", style = "background-color: #0F172A; color: white;" })
+                        @Html.ActionLink("Sil", "OgrenciSil", "Admin", new { id = ogrenci.Id }, new { @class = "btn btn-sm", style = "background-color: #7F1D1D; color: white;" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.ActionLink("Admin Paneline Dön", "Index", "Admin", null, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
+</div>

@@ -1,7 +1,100 @@
-﻿
-@{
-    ViewBag.Title = "OgrenciEkle";
+﻿@{
+    ViewBag.Title = "Öğrenci Ekle";
 }
 
-<h2>OgrenciEkle</h2>
+<style>
 
+    .ogrenci-kutu {
+        border: 4px solid #0F172A; /* Çerçeve 2 kat kalın */
+        border-radius: 12px;
+        padding: 30px;
+        width: 450px;
+        margin: 40px auto;
+        background-color: #f7f7f0; /* iç arka plan */
+    }
+
+        /* input çizgileri kalın */
+        .ogrenci-kutu .form-control {
+            border: 2px solid #0F172A;
+        }
+
+            /* focus olunca glow gitmesin */
+            .ogrenci-kutu .form-control:focus {
+                border: 2px solid #0F172A;
+                box-shadow: none;
+            }
+</style>
+
+<div class="container">
+
+    <div class="ogrenci-kutu">
+
+        <h2 style="text-align:center;">Yeni Öğrenci Ekle</h2>
+
+        @using (Html.BeginForm("OgrenciEkle", "Admin", FormMethod.Post))
+        {
+
+            <div class="form-group">
+                <label>Ad</label>
+                <input type="text" name="Ad" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Soyad</label>
+                <input type="text" name="Soyad" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="Email" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Parola</label>
+                <input type="password" name="Parola" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Öğrenci No</label>
+                <input type="text" name="OgrenciNo" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Bölüm</label>
+                @Html.DropDownList(
+                    "BolumId",
+                    ViewBag.BolumId as SelectList,
+                    "Seçiniz",
+                    new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label>Danışman</label>
+                @Html.DropDownList(
+                    "DanismanId",
+                    ViewBag.DanismanId as SelectList,
+                    "Seçiniz",
+                    new { @class = "form-control" })
+            </div>
+
+            <button type="submit"
+                    class="btn"
+                    style="background-color:#0F172A;color:white;margin-top:10px;">
+                Kaydet
+            </button>
+
+            @Html.ActionLink(
+                "İptal",
+                "OgrenciListesi",
+                "Admin",
+                null,
+                new
+                     {
+                    @class = "btn btn-default",
+                    style = "background-color:#7F1D1D;color:white;margin-top:10px;"
+                })
+        }
+
+    </div>
+
+</div>

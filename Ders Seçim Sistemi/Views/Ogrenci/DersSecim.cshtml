@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.Ders>
+
+@{
+    ViewBag.Title = "Ders Seçimi";
+}
+
+<div class="container">
+    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Ders Seçimi</h2>
+    </div>
+
+    @if (ViewBag.Mesaj != null)
+    {
+        <div class="alert alert-warning">@ViewBag.Mesaj</div>
+    }
+
+    <div id="uyari-mesaj" style="display:none;" class="alert alert-danger"></div>
+    <div id="basari-mesaj" style="display:none;" class="alert alert-success"></div>
+
+    <p><strong>Aktif Dönem:</strong> @(ViewBag.AktifDonem != null ? ViewBag.AktifDonem.Ad : "-")</p>
+    <p><strong>Toplam Kredi:</strong> <span id="toplam-kredi">0</span> / 30</p>
+
+    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
+        <thead>
+        <thead style="background-color: #0F172A; color: white;">
+            <tr>
+                <th>Seç</th>
+                <th>Ders Adı</th>
+                <th>Kredi</th>
+                <th>Kontenjan</th>
+                <th>Gün</th>
+                <th>Saat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var ders in Model)
+                {
+                    var secili = ViewBag.SecilenDersIds != null && ((List<int>)ViewBag.SecilenDersIds).Contains(ders.Id);
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="ders-checkbox" data-ders-id="@ders.Id" data-kredi="@ders.Kredi" @(secili ? "checked" : "") />
+                        </td>
+                        <td>@ders.Ad</td>
+                        <td>@ders.Kredi</td>
+                        <td>@ders.Kontenjan</td>
+                        <td>@ders.Gun</td>
+                        <td>@ders.SaatBaslangic - @ders.SaatBitis</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    @Html.ActionLink("Panele Dön", "Index", "Ogrenci", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+</div>
+
+<style>
+    .ders-checkbox:checked {
+        accent-color: #0F172A;
+    }
+</style>@section scripts {
+    <script>
+        $(document).ready(function () {
+            hesaplaKredi();
+
+            $('.ders-checkbox').change(function () {
+                var dersId = $(this).data('ders-id');
+                var checkbox = $(this);
+
+                $.ajax({
+                    url: '@Url.Action("DersSecimYap", "Ogrenci")',
+                    type: 'POST',
+                    data: { dersId: dersId },
+                    success: function (sonuc) {
+                        if (sonuc.basari) {
+                            $('#basari-mesaj').text(sonuc.mesaj).show();
+                            $('#uyari-mesaj').hide();
+                            hesaplaKredi();
+                            setTimeout(function () { $('#basari-mesaj').hide(); }, 3000);
+                        } else {
+                            $('#uyari-mesaj').text(sonuc.mesaj).show();
+                            $('#basari-mesaj').hide();
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                        }
+                    },
+                    error: function () {
+                        $('#uyari-mesaj').text('Bir hata oluştu.').show();
+                        checkbox.prop('checked', !checkbox.prop('checked'));
+                    }
+                });
+            });
+        });
+
+        function hesaplaKredi() {
+            var toplam = 0;
+            $('.ders-checkbox:checked').each(function () {
+                toplam += parseInt($(this).data('kredi'));
+            });
+            $('#toplam-kredi').text(toplam);
+        }
+    </script>
+}

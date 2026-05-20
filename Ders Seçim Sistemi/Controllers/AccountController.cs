@@ -1,4 +1,5 @@
 ﻿using Ders_Seçim_Sistemi.Models.Entities;
+using log4net;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -7,6 +8,7 @@ namespace Ders_Seçim_Sistemi.Controllers
     public class AccountController : Controller
     {
         private AppDbContext db = new AppDbContext();
+        private static readonly ILog log = LogManager.GetLogger(typeof(AccountController));
 
         // GET: Account/Login
         public ActionResult Login()
@@ -26,6 +28,7 @@ namespace Ders_Seçim_Sistemi.Controllers
                 ViewBag.Hata = "Giriş bilgileriniz eksik veya hatalı.";
                 return View();
             }
+            log.Info($"Kullanıcı giriş yaptı: {email}, Rol: {kullanici.Rol}");
 
             Session["KullaniciId"] = kullanici.Id;
             Session["KullaniciAd"] = kullanici.Ad;
@@ -44,6 +47,7 @@ namespace Ders_Seçim_Sistemi.Controllers
         // GET: Account/Logout
         public ActionResult Logout()
         {
+            log.Info($"Kullanıcı çıkış yaptı: {Session["KullaniciAd"]}");
             Session.Clear();
             return RedirectToAction("Login");
         }

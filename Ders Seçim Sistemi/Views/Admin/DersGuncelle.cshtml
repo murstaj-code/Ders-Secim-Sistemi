@@ -1,7 +1,7 @@
-﻿   @model Ders_Seçim_Sistemi.Models.Entities.Ders
+﻿@model Ders_Seçim_Sistemi.Models.Entities.Ders
 
 @{
-    ViewBag.Title = "Ders Ekle";
+    ViewBag.Title = "Ders Güncelle";
 }
 
 <style>
@@ -26,20 +26,20 @@
 
 <div class="container">
     <div class="form-kutu">
-        <h2 style="text-align:center;">Yeni Ders Ekle</h2>
-        @using (Html.BeginForm("DersEkle", "Admin", FormMethod.Post))
+        <h2 style="text-align:center;">Ders Güncelle</h2>
+        @using (Html.BeginForm("DersGuncelle", "Admin", new { id = Model.Id }, FormMethod.Post))
         {
             <div class="form-group">
                 <label>Ders Adı</label>
-                @Html.TextBoxFor(m => m.Ad, new { @class = "form-control" })
+                <input type="text" name="Ad" class="form-control" value="@Model.Ad" />
             </div>
             <div class="form-group">
                 <label>Kredi</label>
-                @Html.TextBoxFor(m => m.Kredi, new { @class = "form-control" })
+                <input type="number" name="Kredi" class="form-control" value="@Model.Kredi" />
             </div>
             <div class="form-group">
                 <label>Kontenjan</label>
-                @Html.TextBoxFor(m => m.Kontenjan, new { @class = "form-control" })
+                <input type="number" name="Kontenjan" class="form-control" value="@Model.Kontenjan" />
             </div>
             <div class="form-group">
                 <label>Bölüm</label>
@@ -53,23 +53,27 @@
                 <label>Gün</label>
                 <select name="Gun" class="form-control">
                     <option value="">Seçiniz</option>
-                    <option value="Pazartesi">Pazartesi</option>
-                    <option value="Salı">Salı</option>
-                    <option value="Çarşamba">Çarşamba</option>
-                    <option value="Perşembe">Perşembe</option>
-                    <option value="Cuma">Cuma</option>
+                    <option value="Pazartesi" @(Model.Gun == "Pazartesi" ? "selected" : "")>Pazartesi</option>
+                    <option value="Salı" @(Model.Gun == "Salı" ? "selected" : "")>Salı</option>
+                    <option value="Çarşamba" @(Model.Gun == "Çarşamba" ? "selected" : "")>Çarşamba</option>
+                    <option value="Perşembe" @(Model.Gun == "Perşembe" ? "selected" : "")>Perşembe</option>
+                    <option value="Cuma" @(Model.Gun == "Cuma" ? "selected" : "")>Cuma</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Başlangıç Saati</label>
-                @Html.TextBoxFor(m => m.SaatBaslangic, new { @class = "form-control", type = "time" })
+                <input type="time" name="SaatBaslangic" class="form-control" value="@Model.SaatBaslangic" />
             </div>
             <div class="form-group">
                 <label>Bitiş Saati</label>
-                @Html.TextBoxFor(m => m.SaatBitis, new { @class = "form-control", type = "time" })
+                <input type="time" name="SaatBitis" class="form-control" value="@Model.SaatBitis" />
             </div>
-            <button type="submit" class="btn" style="background-color:#0F172A; color:white; margin-top:10px;">Kaydet</button>
+            <button type="submit" class="btn" style="background-color:#0F172A; color:white; margin-top:10px;">Güncelle</button>
             @Html.ActionLink("İptal", "DersListesi", "Admin", null, new { @class = "btn", style = "background-color:#7F1D1D;color:white;margin-top:10px;" })
         }
+        @if (TempData["Hata"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Hata"]</div>
+        }   
     </div>
 </div>

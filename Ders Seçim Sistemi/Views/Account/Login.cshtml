@@ -7,36 +7,93 @@
 <head>
     <meta charset="utf-8" />
     <title>Giriş Yapınız</title>
+
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+
+        body {
+            background-color: #f7f7f0;
+        }
+
+        /* ANA GİRİŞ KUTUSU */
+        .login-kutu {
+            border: 4px solid #0F172A;
+            border-radius: 12px;
+            padding: 30px;
+            background-color: #f7f7f0;
+            margin-top: 120px;
+        }
+
+            /* INPUT ÇERÇEVELER */
+            .login-kutu .form-control {
+                border: 2px solid #0F172A;
+                border-radius: 6px;
+            }
+
+                .login-kutu .form-control:focus {
+                    border: 2px solid #0F172A;
+                    box-shadow: none;
+                }
+
+        label {
+            font-weight: 600;
+            color: #0F172A;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0F172A;
+            font-weight: bold;
+        }
+    </style>
+
 </head>
+
 <body>
-    <div class="container" style="max-width:400px; margin-top:100px;">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Ders Seçim Sistemi - Giriş</h3>
-            </div>
-            <div class="panel-body">
 
-                @if (ViewBag.Hata != null)
-                {
-                    <div class="alert alert-danger">@ViewBag.Hata</div>
-                }
+    <div class="container" style="max-width:400px;">
 
-                @using (Html.BeginForm("Login", "Account", FormMethod.Post))
-                {
-                    <div class="form-group">
-                        <label>E-posta</label>
-                        <input type="email" name="email" class="form-control" placeholder="E-posta" />
-                    </div>
-                    <div class="form-group">
-                        <label>Parola</label>
-                        <input type="password" name="parola" class="form-control" placeholder="Parola" />
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Giriş Yapınız</button>
-                }
+        <div class="login-kutu">
 
-            </div>
+            <h3 class="login-title">
+                YÜ Ders Seçim Sistemi - Giriş
+            </h3>
+
+            @if (ViewBag.Hata != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Hata</div>
+            }
+
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                <div class="form-group">
+                    <label>E-posta</label>
+                    <input type="email"
+                           name="email"
+                           class="form-control"
+                           placeholder="E-posta" />
+                </div>
+
+                <div class="form-group">
+                    <label>Parola</label>
+                    <input type="password"
+                           name="parola"
+                           class="form-control"
+                           placeholder="Parola" />
+                </div>
+
+                <button type="submit"
+                        class="btn btn-block"
+                        style="background-color:#0F172A;color:white;margin-top:10px;">
+                    Giriş Yapınız
+                </button>
+            }
+
         </div>
+
     </div>
+
 </body>
 </html>

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.DersSecim>
+
+@{
+    ViewBag.Title = "Onay Paneli";
+}
+
+<div class="container">
+    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Onay Paneli</h2>
+    </div>
+
+    <div id="uyari-mesaj" style="display:none;" class="alert alert-danger"></div>
+    <div id="basari-mesaj" style="display:none;" class="alert alert-success"></div>
+
+    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
+        <thead style="background-color: #0F172A; color: white;">
+            <tr>
+                <th>Öğrenci No</th>
+                <th>Ad Soyad</th>
+                <th>Ders Adı</th>
+                <th>Kredi</th>
+                <th>Gün</th>
+                <th>Saat</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var secim in Model)
+                {
+                    <tr id="satir-@secim.Id">
+                        <td>@(secim.Ogrenci != null ? secim.Ogrenci.OgrenciNo : "-")</td>
+                        <td>@(secim.Ogrenci != null && secim.Ogrenci.Kullanici != null ? secim.Ogrenci.Kullanici.Ad + " " + secim.Ogrenci.Kullanici.Soyad : "-")</td>
+                        <td>@secim.Ders.Ad</td>
+                        <td>@secim.Ders.Kredi</td>
+                        <td>@secim.Ders.Gun</td>
+                        <td>@secim.Ders.SaatBaslangic - @secim.Ders.SaatBitis</td>
+                        <td id="durum-@secim.Id">
+                            @if (secim.Durum == "Onaylandi")
+                            {
+                                <span style="color: green; font-weight: bold;">Onaylandı</span>
+                            }
+                            else if (secim.Durum == "Reddedildi")
+                            {
+                                <span style="color: red; font-weight: bold;">Reddedildi</span>
+                            }
+                            else
+                            {
+                                <span style="color: orange; font-weight: bold;">Bekliyor</span>
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-sm" style="background-color: green; color: white;" onclick="secimGuncelle(@secim.Id, 'Onaylandi')">Onayla</button>
+                            <button class="btn btn-sm" style="background-color: #7F1D1D; color: white;" onclick="secimGuncelle(@secim.Id, 'Reddedildi')">Reddet</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" style="text-align: center;">Henüz ders seçimi bulunmamaktadır.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    @Html.ActionLink("Danışman Paneline Dön", "Index", "Danisman", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+</div>
+
+@section scripts {
+    <script>
+        function secimGuncelle(secimId, durum) {
+            $.ajax({
+                url: '@Url.Action("SecimGuncelle", "Danisman")',
+                type: 'POST',
+                data: { secimId: secimId, durum: durum },
+                success: function (sonuc) {
+                    if (sonuc.basari) {
+                        $('#basari-mesaj').text(sonuc.mesaj).show();
+                        $('#uyari-mesaj').hide();
+                        var durumText = durum == 'Onaylandi' ? '<span style="color:green;font-weight:bold;">Onaylandı</span>' : '<span style="color:red;font-weight:bold;">Reddedildi</span>';
+                        $('#durum-' + secimId).html(durumText);
+                        setTimeout(function () { $('#basari-mesaj').hide(); }, 3000);
+                    } else {
+                        $('#uyari-mesaj').text(sonuc.mesaj).show();
+                    }
+                },
+                error: function () {
+                    $('#uyari-mesaj').text('Bir hata oluştu.').show();
+                }
+            });
+        }
+    </script>
+}

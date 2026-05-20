@@ -1,42 +1,52 @@
 ﻿@model IEnumerable<Ders_Seçim_Sistemi.Models.Entities.Donem>
 
 @{
-    ViewBag.Title = "Dönem Listesi";
+    ViewBag.Title = "Dönem İşlemleri";
 }
 
 <div class="container">
-    <h2>Dönem Listesi</h2>
-    @Html.ActionLink("Yeni Dönem Ekle", "DonemEkle", "Admin", null, new { @class = "btn btn-primary" })
-    <hr />
-    <table class="table table-bordered">
-        <thead>
+    <h2>Dönem İşlemleri</h2>
+    @Html.ActionLink("Yeni Dönem Ekle", "DonemEkle", "Admin", null, new { @class = "btn", style = "background-color: #0F172A; color: white; margin-top: 10px; margin-bottom: 10px;" })
+<table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
+    <thead>
+    <thead style="background-color: #0F172A; color: white;">
+        <tr>
+            <th>Id</th>
+            <th>Dönem Adı</th>
+            <th>Başlangıç</th>
+            <th>Bitiş</th>
+            <th>Aktif</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var donem in Model)
+        {
             <tr>
-                <th>Id</th>
-                <th>Dönem Adı</th>
-                <th>Başlangıç</th>
-                <th>Bitiş</th>
-                <th>Aktif</th>
-                <th>İşlemler</th>
+                <td>@donem.Id</td>
+                <td>@donem.Ad</td>
+                <td>@donem.BaslangicTarihi.ToShortDateString()</td>
+                <td>@donem.BitisTarihi.ToShortDateString()</td>
+                <td>@(donem.AktifMi ? "Evet" : "Hayır")</td>
+                <td>
+                    @Html.ActionLink(
+      donem.AktifMi ? "Pasifleştir" : "Aktifleştir",
+      "DonemAktifDegistir",
+      "Admin",
+      new { id = donem.Id },
+      new
+           {
+          @class = "btn",
+          style = donem.AktifMi
+              ? "background-color:#7F1D1D;color:white;"
+              : "background-color:#0F172A;color:white;"
+      })
+                    @Html.ActionLink("Sil", "DonemSil", "Admin", new { id = donem.Id }, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var donem in Model)
-            {
-                <tr>
-                    <td>@donem.Id</td>
-                    <td>@donem.Ad</td>
-                    <td>@donem.BaslangicTarihi.ToShortDateString()</td>
-                    <td>@donem.BitisTarihi.ToShortDateString()</td>
-                    <td>@(donem.AktifMi ? "Evet" : "Hayır")</td>
-                    <td>
-                        @Html.ActionLink("Aktif/Pasif", "DonemAktifDegistir", "Admin", new { id = donem.Id }, new { @class = "btn btn-warning btn-sm" })
-                        @Html.ActionLink("Sil", "DonemSil", "Admin", new { id = donem.Id }, new { @class = "btn btn-danger btn-sm" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <hr />
-    @Html.ActionLink("Admin Paneline Dön", "Index", "Admin", null, new { @class = "btn btn-default" })
+        }
+    </tbody>
+</table>
+    @Html.ActionLink("Admin Paneline Dön", "Index", "Admin", null, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
 </div>
 
