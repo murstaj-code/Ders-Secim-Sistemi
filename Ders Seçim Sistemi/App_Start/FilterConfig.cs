@@ -8,6 +8,8 @@ namespace Ders_Seçim_Sistemi
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new Ders_Seçim_Sistemi.Filters.NoCache());
         }
+
     }
 }

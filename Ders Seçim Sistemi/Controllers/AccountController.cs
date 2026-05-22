@@ -1,6 +1,7 @@
 ﻿using Ders_Seçim_Sistemi.Models.Entities;
 using log4net;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Ders_Seçim_Sistemi.Controllers
@@ -13,6 +14,15 @@ namespace Ders_Seçim_Sistemi.Controllers
         // GET: Account/Login
         public ActionResult Login()
         {
+            if (Session["Rol"] != null)
+            {
+                if (Session["Rol"].ToString() == "Admin")
+                    return RedirectToAction("Index", "Admin");
+                else if (Session["Rol"].ToString() == "Ogrenci")
+                    return RedirectToAction("Index", "Ogrenci");
+                else if (Session["Rol"].ToString() == "Danisman")
+                    return RedirectToAction("Index", "Danisman");
+            }
             return View();
         }
 
@@ -25,9 +35,11 @@ namespace Ders_Seçim_Sistemi.Controllers
 
             if (kullanici == null)
             {
+                log.Warn($"Başarısız giriş denemesi: {email}");
                 ViewBag.Hata = "Giriş bilgileriniz eksik veya hatalı.";
                 return View();
             }
+
             log.Info($"Kullanıcı giriş yaptı: {email}, Rol: {kullanici.Rol}");
 
             Session["KullaniciId"] = kullanici.Id;
@@ -49,6 +61,9 @@ namespace Ders_Seçim_Sistemi.Controllers
         {
             log.Info($"Kullanıcı çıkış yaptı: {Session["KullaniciAd"]}");
             Session.Clear();
+            Session.Abandon();
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
             return RedirectToAction("Login");
         }
     }

@@ -1,98 +1,249 @@
 ﻿@{
     ViewBag.Title = "Öğrenci Ekle";
 }
-
+@if (TempData["Hata"] != null)
+{
+    <div class="alert alert-danger" style="border-radius: 14px;">@TempData["Hata"]</div>
+}
 <style>
 
-    .ogrenci-kutu {
-        border: 4px solid #0F172A; /* Çerçeve 2 kat kalın */
-        border-radius: 12px;
-        padding: 30px;
-        width: 450px;
-        margin: 40px auto;
-        background-color: #f7f7f0; /* iç arka plan */
+    body {
+        background: radial-gradient(circle at top left, #dbeafe, #f1f5f9 40%), radial-gradient(circle at bottom right, #bfdbfe, #f8fafc 35%);
+        min-height: 100vh;
     }
 
-        /* input çizgileri kalın */
-        .ogrenci-kutu .form-control {
-            border: 2px solid #0F172A;
+    /* CONTAINER */
+
+    .ogrenci-container {
+        max-width: 520px;
+        margin: 60px auto;
+    }
+
+    /* GLASS CARD */
+
+    .ogrenci-kutu {
+        animation: fadeIn 0.7s ease;
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 30px;
+        padding: 42px;
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10), inset 0 1px 1px rgba(255,255,255,0.7);
+        transition: 0.3s;
+    }
+
+        .ogrenci-kutu:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 35px rgba(59,130,246,0.12), 0 18px 45px rgba(15,23,42,0.14);
         }
 
-            /* focus olunca glow gitmesin */
-            .ogrenci-kutu .form-control:focus {
-                border: 2px solid #0F172A;
-                box-shadow: none;
-            }
+    /* TITLE */
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 32px;
+        color: #0F172A;
+        font-weight: 800;
+        font-size: 36px;
+    }
+
+    /* LABEL */
+
+    label {
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 8px;
+    }
+
+    /* INPUT */
+
+    .ogrenci-kutu .form-control {
+        height: 52px;
+        border-radius: 14px;
+        border: 1px solid #CBD5E1;
+        background: rgba(255,255,255,0.85);
+        box-shadow: none;
+        font-size: 16px;
+        transition: 0.25s;
+        margin-bottom: 8px;
+    }
+
+        .ogrenci-kutu .form-control:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+            background: white;
+        }
+
+    /* BUTTON AREA */
+
+    .btn-area {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    /* SAVE BUTTON */
+
+    .btn-kaydet {
+        flex: 1;
+        height: 52px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg,#0F172A,#1E3A8A);
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+    }
+
+        .btn-kaydet:hover {
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 0 18px rgba(59,130,246,0.35), 0 14px 28px rgba(15,23,42,0.22);
+            background: linear-gradient(135deg,#172554,#2563EB);
+        }
+
+    /* CANCEL BUTTON */
+
+    .btn-iptal {
+        flex: 1;
+        height: 52px;
+        border-radius: 14px;
+        text-align: center;
+        line-height: 38px;
+        text-decoration: none;
+        background: linear-gradient(135deg,#7F1D1D,#DC2626);
+        color: white;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+
+        .btn-iptal:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(239,68,68,0.35);
+        }
+
+    /* ANIMATION */
+
+    @@keyframes fadeIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
-<div class="container">
+<div class="ogrenci-container">
 
     <div class="ogrenci-kutu">
 
-        <h2 style="text-align:center;">Yeni Öğrenci Ekle</h2>
+        <h2 class="page-title">
+            Yeni Öğrenci Ekle
+        </h2>
 
         @using (Html.BeginForm("OgrenciEkle", "Admin", FormMethod.Post))
         {
 
             <div class="form-group">
+
                 <label>Ad</label>
-                <input type="text" name="Ad" class="form-control" />
+
+                <input type="text"
+                       name="Ad"
+                       class="form-control" />
+
             </div>
 
             <div class="form-group">
+
                 <label>Soyad</label>
-                <input type="text" name="Soyad" class="form-control" />
+
+                <input type="text"
+                       name="Soyad"
+                       class="form-control" />
+
             </div>
 
             <div class="form-group">
+
                 <label>Email</label>
-                <input type="email" name="Email" class="form-control" />
+
+                <input type="email"
+                       name="Email"
+                       class="form-control" />
+
             </div>
 
             <div class="form-group">
+
                 <label>Parola</label>
-                <input type="password" name="Parola" class="form-control" />
+
+                <input type="password"
+                       name="Parola"
+                       class="form-control" />
+
             </div>
 
             <div class="form-group">
+
                 <label>Öğrenci No</label>
-                <input type="text" name="OgrenciNo" class="form-control" />
+
+                <input type="text"
+                       name="OgrenciNo"
+                       class="form-control" />
+
             </div>
 
             <div class="form-group">
+
                 <label>Bölüm</label>
+
                 @Html.DropDownList(
                     "BolumId",
                     ViewBag.BolumId as SelectList,
                     "Seçiniz",
                     new { @class = "form-control" })
+
             </div>
 
             <div class="form-group">
+
                 <label>Danışman</label>
+
                 @Html.DropDownList(
                     "DanismanId",
                     ViewBag.DanismanId as SelectList,
                     "Seçiniz",
                     new { @class = "form-control" })
+
             </div>
 
-            <button type="submit"
-                    class="btn"
-                    style="background-color:#0F172A;color:white;margin-top:10px;">
-                Kaydet
-            </button>
+            <div class="btn-area">
 
-            @Html.ActionLink(
-                "İptal",
-                "OgrenciListesi",
-                "Admin",
-                null,
-                new
-                     {
-                    @class = "btn btn-default",
-                    style = "background-color:#7F1D1D;color:white;margin-top:10px;"
-                })
+                <button type="submit"
+                        class="btn btn-kaydet">
+
+                    Kaydet
+
+                </button>
+
+                @Html.ActionLink(
+                    "İptal",
+                    "OgrenciListesi",
+                    "Admin",
+                    null,
+                    new { @class = "btn-iptal" })
+
+            </div>
         }
 
     </div>

@@ -135,12 +135,21 @@
     <Compile Include="Controllers\DanismanController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OgrenciController.cs" />
+    <Compile Include="Filters\NoCache.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202605120829176_CascadeDuzelt.cs" />
     <Compile Include="Migrations\202605120829176_CascadeDuzelt.Designer.cs">
       <DependentUpon>202605120829176_CascadeDuzelt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605220621207_ManyToManyBolum.cs" />
+    <Compile Include="Migrations\202605220621207_ManyToManyBolum.Designer.cs">
+      <DependentUpon>202605220621207_ManyToManyBolum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605220745281_ModelGuncelleme.cs" />
+    <Compile Include="Migrations\202605220745281_ModelGuncelleme.Designer.cs">
+      <DependentUpon>202605220745281_ModelGuncelleme.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\AppDbContext.cs" />
@@ -259,6 +268,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202605120829176_CascadeDuzelt.resx">
       <DependentUpon>202605120829176_CascadeDuzelt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605220621207_ManyToManyBolum.resx">
+      <DependentUpon>202605220621207_ManyToManyBolum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605220745281_ModelGuncelleme.resx">
+      <DependentUpon>202605220745281_ModelGuncelleme.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

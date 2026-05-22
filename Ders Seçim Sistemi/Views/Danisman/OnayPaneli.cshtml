@@ -4,95 +4,387 @@
     ViewBag.Title = "Onay Paneli";
 }
 
-<div class="container">
-    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h2 style="margin: 0;">Onay Paneli</h2>
+<style>
+
+    body {
+        background: radial-gradient(circle at top left, #dbeafe, #f1f5f9 40%), radial-gradient(circle at bottom right, #bfdbfe, #f8fafc 35%);
+        min-height: 100vh;
+    }
+
+    /* PAGE TITLE */
+
+    .page-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: #0F172A;
+        margin-bottom: 24px;
+        animation: fadeIn 0.7s ease;
+    }
+
+    /* ALERT */
+
+    .alert-modern {
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        font-weight: 700;
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .alert-danger-modern {
+        background: rgba(239,68,68,0.12);
+        color: #991B1B;
+        border: 1px solid rgba(239,68,68,0.25);
+    }
+
+    .alert-success-modern {
+        background: rgba(34,197,94,0.12);
+        color: #166534;
+        border: 1px solid rgba(34,197,94,0.25);
+    }
+
+    /* TABLE CARD */
+
+    .table-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+        animation: fadeIn 0.7s ease;
+    }
+
+    /* TABLE */
+
+    .modern-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .modern-table thead {
+            background: linear-gradient(135deg,#0F172A,#172554);
+            color: white;
+        }
+
+        .modern-table th {
+            padding: 18px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .modern-table td {
+            padding: 18px;
+            color: #0F172A;
+            border-top: 1px solid rgba(203,213,225,0.7);
+        }
+
+        .modern-table tbody tr {
+            transition: 0.25s;
+        }
+
+            .modern-table tbody tr:hover {
+                background: rgba(219,234,254,0.35);
+            }
+
+    /* STATUS */
+
+    .durum-onay {
+        color: #15803D;
+        font-weight: 700;
+    }
+
+    .durum-red {
+        color: #B91C1C;
+        font-weight: 700;
+    }
+
+    .durum-bekle {
+        color: #D97706;
+        font-weight: 700;
+    }
+
+    /* BUTTONS */
+
+    .btn-onay {
+        border: none;
+        padding: 8px 14px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#15803D,#22C55E);
+        transition: 0.3s;
+        margin-right: 6px;
+    }
+
+        .btn-onay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 16px rgba(34,197,94,0.35);
+        }
+
+    .btn-red {
+        border: none;
+        padding: 8px 14px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#7F1D1D,#DC2626);
+        transition: 0.3s;
+    }
+
+        .btn-red:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 16px rgba(239,68,68,0.35);
+        }
+
+    /* BACK BUTTON */
+
+    .btn-back {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 12px 22px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#0F172A,#1E3A8A);
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+    }
+
+        .btn-back:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(59,130,246,0.35), 0 14px 28px rgba(15,23,42,0.22);
+            background: linear-gradient(135deg,#172554,#2563EB);
+        }
+
+    /* EMPTY MESSAGE */
+
+    .empty-message {
+        text-align: center;
+        padding: 24px;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    /* ANIMATION */
+
+    @@keyframes fadeIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container" style="margin-top:40px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 class="page-title" style="margin: 0;">Onay Paneli</h2>
+        @Html.ActionLink("Panele Dön", "Index", "Ogrenci", null, new { @class = "btn-back" })
     </div>
 
-    <div id="uyari-mesaj" style="display:none;" class="alert alert-danger"></div>
-    <div id="basari-mesaj" style="display:none;" class="alert alert-success"></div>
+    <div id="uyari-mesaj"
+         class="alert-modern alert-danger-modern">
+    </div>
 
-    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
-        <thead style="background-color: #0F172A; color: white;">
-            <tr>
-                <th>Öğrenci No</th>
-                <th>Ad Soyad</th>
-                <th>Ders Adı</th>
-                <th>Kredi</th>
-                <th>Gün</th>
-                <th>Saat</th>
-                <th>Durum</th>
-                <th>İşlemler</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var secim in Model)
+    <div id="basari-mesaj"
+         class="alert-modern alert-success-modern">
+    </div>
+
+    <div class="table-card">
+
+        <table class="modern-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Öğrenci No</th>
+
+                    <th>Ad Soyad</th>
+
+                    <th>Ders Adı</th>
+
+                    <th>Kredi</th>
+
+                    <th>Gün</th>
+
+                    <th>Saat</th>
+
+                    <th>Durum</th>
+
+                    <th>İşlemler</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model != null && Model.Any())
                 {
-                    <tr id="satir-@secim.Id">
-                        <td>@(secim.Ogrenci != null ? secim.Ogrenci.OgrenciNo : "-")</td>
-                        <td>@(secim.Ogrenci != null && secim.Ogrenci.Kullanici != null ? secim.Ogrenci.Kullanici.Ad + " " + secim.Ogrenci.Kullanici.Soyad : "-")</td>
-                        <td>@secim.Ders.Ad</td>
-                        <td>@secim.Ders.Kredi</td>
-                        <td>@secim.Ders.Gun</td>
-                        <td>@secim.Ders.SaatBaslangic - @secim.Ders.SaatBitis</td>
-                        <td id="durum-@secim.Id">
-                            @if (secim.Durum == "Onaylandi")
-                            {
-                                <span style="color: green; font-weight: bold;">Onaylandı</span>
-                            }
-                            else if (secim.Durum == "Reddedildi")
-                            {
-                                <span style="color: red; font-weight: bold;">Reddedildi</span>
-                            }
-                            else
-                            {
-                                <span style="color: orange; font-weight: bold;">Bekliyor</span>
-                            }
+                    foreach (var secim in Model)
+                    {
+                        <tr id="satir-@secim.Id">
+
+                            <td>
+                                @(secim.Ogrenci != null
+                                    ? secim.Ogrenci.OgrenciNo
+                                    : "-")
+                            </td>
+
+                            <td>
+                                @(secim.Ogrenci != null && secim.Ogrenci.Kullanici != null
+                                    ? secim.Ogrenci.Kullanici.Ad + " " + secim.Ogrenci.Kullanici.Soyad
+                                    : "-")
+                            </td>
+
+                            <td>@secim.Ders.Ad</td>
+
+                            <td>@secim.Ders.Kredi</td>
+
+                            <td>@secim.Ders.Gun</td>
+
+                            <td>
+                                @secim.Ders.SaatBaslangic - @secim.Ders.SaatBitis
+                            </td>
+
+                            <td id="durum-@secim.Id">
+
+                                @if (secim.Durum == "Onaylandi")
+                                {
+                                    <span class="durum-onay">
+                                        Onaylandı
+                                    </span>
+                                }
+                                else if (secim.Durum == "Reddedildi")
+                                {
+                                    <span class="durum-red">
+                                        Reddedildi
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="durum-bekle">
+                                        Bekliyor
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <button class="btn-onay"
+                                        onclick="secimGuncelle(@secim.Id, 'Onaylandi')">
+
+                                    Onayla
+
+                                </button>
+
+                                <button class="btn-red"
+                                        onclick="secimGuncelle(@secim.Id, 'Reddedildi')">
+
+                                    Reddet
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="8" class="empty-message">
+                            Henüz ders seçimi bulunmamaktadır.
                         </td>
-                        <td>
-                            <button class="btn btn-sm" style="background-color: green; color: white;" onclick="secimGuncelle(@secim.Id, 'Onaylandi')">Onayla</button>
-                            <button class="btn btn-sm" style="background-color: #7F1D1D; color: white;" onclick="secimGuncelle(@secim.Id, 'Reddedildi')">Reddet</button>
-                        </td>
+
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="8" style="text-align: center;">Henüz ders seçimi bulunmamaktadır.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-    <hr />
-    @Html.ActionLink("Danışman Paneline Dön", "Index", "Danisman", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
 </div>
 
 @section scripts {
+
     <script>
+
         function secimGuncelle(secimId, durum) {
+
             $.ajax({
+
                 url: '@Url.Action("SecimGuncelle", "Danisman")',
+
                 type: 'POST',
-                data: { secimId: secimId, durum: durum },
+
+                data: {
+                    secimId: secimId,
+                    durum: durum
+                },
+
                 success: function (sonuc) {
+
                     if (sonuc.basari) {
-                        $('#basari-mesaj').text(sonuc.mesaj).show();
+
+                        $('#basari-mesaj')
+                            .text(sonuc.mesaj)
+                            .fadeIn();
+
                         $('#uyari-mesaj').hide();
-                        var durumText = durum == 'Onaylandi' ? '<span style="color:green;font-weight:bold;">Onaylandı</span>' : '<span style="color:red;font-weight:bold;">Reddedildi</span>';
+
+                        var durumText =
+                            durum == 'Onaylandi'
+                                ? '<span class="durum-onay">Onaylandı</span>'
+                                : '<span class="durum-red">Reddedildi</span>';
+
                         $('#durum-' + secimId).html(durumText);
-                        setTimeout(function () { $('#basari-mesaj').hide(); }, 3000);
-                    } else {
-                        $('#uyari-mesaj').text(sonuc.mesaj).show();
+
+                        setTimeout(function () {
+
+                            $('#basari-mesaj').fadeOut();
+
+                        }, 3000);
+
+                    }
+                    else {
+
+                        $('#uyari-mesaj')
+                            .text(sonuc.mesaj)
+                            .fadeIn();
+
                     }
                 },
+
                 error: function () {
-                    $('#uyari-mesaj').text('Bir hata oluştu.').show();
+
+                    $('#uyari-mesaj')
+                        .text('Bir hata oluştu.')
+                        .fadeIn();
+
                 }
+
             });
         }
+
     </script>
 }

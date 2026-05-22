@@ -7,9 +7,47 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <style>
+
+        body {
+            background-color: #F1F5F9;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .custom-navbar {
+            background: rgba(15,23,42,0.96) !important;
+            border: none !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+            .custom-navbar .navbar-brand {
+                color: white !important;
+                display: flex;
+                align-items: center;
+                font-size: 24px;
+                font-weight: 700;
+                transition: 0.3s;
+            }
+
+                .custom-navbar .navbar-brand:hover {
+                    color: #BFDBFE !important;
+                }
+
+            .custom-navbar img {
+                height: 70px;
+                margin-right: 12px;
+                transition: 0.3s;
+            }
+
+                .custom-navbar img:hover {
+                    transform: scale(1.05);
+                }
+    </style>
 </head>
-<body style="background-color: #f7f7f0; ">
-    <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #0F172A; font-weight: bold; font-size: 20px; ">
+<body style="background-color: #F1F5F9; ">
+    <nav class="navbar navbar-inverse navbar-fixed-top custom-navbar">
         <div class="container">
             <a href="@Url.Action("Login", "Account")" class="navbar-brand" style="color: white; display: flex; align-items: center;">
                 <img src="~/Content/logoimg.png" style="height: 70px; margin-right: 8px;" />
@@ -28,5 +66,12 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script>
+    window.onpageshow = function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+    </script>
 </body>
 </html>

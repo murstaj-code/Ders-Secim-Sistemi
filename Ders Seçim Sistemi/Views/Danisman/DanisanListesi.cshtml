@@ -4,46 +4,216 @@
     ViewBag.Title = "Danışan Listesi";
 }
 
-<div class="container">
-    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h2 style="margin: 0;">Danışan Listesi</h2>
+<style>
+
+    body {
+        background: radial-gradient(circle at top left, #dbeafe, #f1f5f9 40%), radial-gradient(circle at bottom right, #bfdbfe, #f8fafc 35%);
+        min-height: 100vh;
+    }
+
+    /* PAGE TITLE */
+
+    .page-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: #0F172A;
+        margin-bottom: 24px;
+        animation: fadeIn 0.7s ease;
+    }
+
+    /* TABLE CARD */
+
+    .table-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+        animation: fadeIn 0.7s ease;
+    }
+
+    /* TABLE */
+
+    .modern-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .modern-table thead {
+            background: linear-gradient(135deg,#0F172A,#172554);
+            color: white;
+        }
+
+        .modern-table th {
+            padding: 18px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .modern-table td {
+            padding: 18px;
+            color: #0F172A;
+            border-top: 1px solid rgba(203,213,225,0.7);
+        }
+
+        .modern-table tbody tr {
+            transition: 0.25s;
+        }
+
+            .modern-table tbody tr:hover {
+                background: rgba(219,234,254,0.35);
+                transform: scale(1.002);
+            }
+
+    /* BUTTON */
+
+    .btn-onay {
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#0F172A,#1E3A8A);
+        transition: 0.3s;
+    }
+
+        .btn-onay:hover {
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 0 16px rgba(59,130,246,0.35);
+        }
+
+    /* BACK BUTTON */
+
+    .btn-back {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 12px 22px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#7F1D1D,#DC2626);
+        transition: 0.3s;
+    }
+
+        .btn-back:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(239,68,68,0.35);
+        }
+
+    /* EMPTY MESSAGE */
+
+    .bos-mesaj {
+        text-align: center;
+        padding: 30px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    /* ANIMATION */
+
+    @@keyframes fadeIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container" style="margin-top:40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 class="page-title" style="margin: 0;">Danışan İşlemleri</h2>
+        @Html.ActionLink("Panele Dön", "Index", "Ogrenci", null, new { @class = "btn-back" })
     </div>
 
-    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
-        <thead style="background-color: #0F172A; color: white;">
-            <tr>
-                <th>Öğrenci No</th>
-                <th>Ad Soyad</th>
-                <th>Email</th>
-                <th>Bölüm</th>
-                <th>İşlemler</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var ogrenci in Model)
+    <div class="table-card">
+
+        <table class="modern-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Öğrenci No</th>
+
+                    <th>Ad Soyad</th>
+
+                    <th>Email</th>
+
+                    <th>Bölüm</th>
+
+                    <th>İşlemler</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var ogrenci in Model)
+                    {
+                        <tr>
+
+                            <td>@ogrenci.OgrenciNo</td>
+
+                            <td>
+                                @(ogrenci.Kullanici != null
+                                    ? ogrenci.Kullanici.Ad + " " + ogrenci.Kullanici.Soyad
+                                    : "-")
+                            </td>
+
+                            <td>
+                                @(ogrenci.Kullanici != null
+                                    ? ogrenci.Kullanici.Email
+                                    : "-")
+                            </td>
+
+                            <td>
+                                @(ogrenci.Bolum != null
+                                    ? ogrenci.Bolum.Ad
+                                    : "-")
+                            </td>
+
+                            <td>
+
+                                @Html.ActionLink(
+                                    "Onay Paneli",
+                                    "OnayPaneli",
+                                    "Danisman",
+                                    new { ogrenciId = ogrenci.Id },
+                                    new { @class = "btn-onay" })
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@ogrenci.OgrenciNo</td>
-                        <td>@(ogrenci.Kullanici != null ? ogrenci.Kullanici.Ad + " " + ogrenci.Kullanici.Soyad : "-")</td>
-                        <td>@(ogrenci.Kullanici != null ? ogrenci.Kullanici.Email : "-")</td>
-                        <td>@(ogrenci.Bolum != null ? ogrenci.Bolum.Ad : "-")</td>
-                        <td>
-                            @Html.ActionLink("Onay Paneli", "OnayPaneli", "Danisman", new { ogrenciId = ogrenci.Id }, new { @class = "btn btn-sm", style = "background-color: #0F172A; color: white;" })
+                        <td colspan="5" class="bos-mesaj">
+                            Henüz danışan öğrenci bulunmamaktadır.
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5" style="text-align: center;">Henüz danışan öğrenci bulunmamaktadır.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-    <hr />
-    @Html.ActionLink("Danışman Paneline Dön", "Index", "Danisman", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+            </tbody>
+
+        </table>
+
+    </div>
 </div>

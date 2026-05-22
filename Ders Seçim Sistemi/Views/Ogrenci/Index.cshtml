@@ -2,32 +2,238 @@
     ViewBag.Title = "Öğrenci Paneli";
 }
 
-<div class="container">
-    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h2 style="margin: 0;">Hoş geldiniz, @Session["KullaniciAd"]</h2>
+<style>
+
+    body {
+        background: radial-gradient(circle at top left, #dbeafe, #f1f5f9 40%), radial-gradient(circle at bottom right, #bfdbfe, #f8fafc 35%);
+        min-height: 100vh;
+    }
+
+    /* WELCOME CARD */
+
+    .welcome-card {
+        background: linear-gradient(135deg,#0F172A,#1E3A8A);
+        color: white;
+        padding: 24px 30px;
+        border-radius: 24px;
+        margin-bottom: 28px;
+        box-shadow: 0 10px 35px rgba(15,23,42,0.18);
+        animation: fadeIn 0.7s ease;
+    }
+
+    .welcome-title {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    /* INFO CARD */
+
+    .info-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        border-radius: 24px;
+        padding: 24px 28px;
+        margin-bottom: 28px;
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+        animation: fadeIn 0.7s ease;
+    }
+
+    .info-text {
+        color: #0F172A;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    /* PANEL BOXES */
+
+    .panel-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        border-radius: 26px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+        transition: 0.3s;
+        animation: fadeIn 0.7s ease;
+        margin-bottom: 20px;
+    }
+
+        .panel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(59,130,246,0.12), 0 18px 45px rgba(15,23,42,0.14);
+        }
+
+    .panel-header {
+        background: linear-gradient(135deg,#0F172A,#172554);
+        color: white;
+        padding: 16px 20px;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .panel-body {
+        padding: 24px;
+    }
+
+    /* BUTTON */
+
+    .panel-btn {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#0F172A,#2563EB);
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+    }
+
+        .panel-btn:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(59,130,246,0.35), 0 14px 28px rgba(15,23,42,0.22);
+        }
+
+    /* LOGOUT */
+
+    .logout-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 12px 22px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#7F1D1D,#DC2626);
+        transition: 0.3s;
+    }
+
+        .logout-btn:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(239,68,68,0.35);
+        }
+
+    /* ANIMATION */
+
+    @@keyframes fadeIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container" style="margin-top:40px;">
+
+    <div class="welcome-card">
+
+        <h2 class="welcome-title">
+            Hoş geldiniz, @Session["KullaniciAd"]
+        </h2>
+
     </div>
 
-    <div style="border: 2px solid #0F172A; border-radius: 8px; padding: 10px; margin-bottom: 20px;">
-        <p><strong>Aktif Dönem:</strong> @(ViewBag.AktifDonem != null ? ViewBag.AktifDonem.Ad : "Aktif dönem yok")</p>
-        <p><strong>Danışman:</strong> @(ViewBag.Ogrenci != null && ViewBag.Ogrenci.Danisman != null ? ViewBag.Ogrenci.Danisman.Kullanici.Ad + " " + ViewBag.Ogrenci.Danisman.Kullanici.Soyad : "-")</p>
-        <p><strong>Bölüm:</strong> @(ViewBag.Ogrenci != null ? ViewBag.Ogrenci.Bolum.Ad : "-")</p>
-    </div>
+    <div class="info-card">
 
-    <div class="row" style="margin: 0; margin-bottom: 20px;">
-        <div class="col-md-6" style="padding: 0; border: 2px solid #0F172A; border-radius: 8px 0 0 8px;">
-            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 6px 10px; border-bottom: 2px solid #0F172A;">Ders Seçimi</p>
-            <div style="padding: 10px;">
-                @Html.ActionLink("Ders Seç", "DersSecim", "Ogrenci", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
-            </div>
+        <div class="info-text">
+
+            Aktif Dönem:
+            @(ViewBag.AktifDonem != null
+                ? ViewBag.AktifDonem.Ad
+                : "Aktif dönem yok")
+
         </div>
-        <div class="col-md-6" style="padding: 0; border: 2px solid #0F172A; border-left: none; border-radius: 0 8px 8px 0;">
-            <p style="font-weight: bold; color: #0F172A; margin: 0; padding: 6px 10px; border-bottom: 2px solid #0F172A;">Seçilen Dersler</p>
-            <div style="padding: 10px;">
-                @Html.ActionLink("Derslerim", "SecilenDersler", "Ogrenci", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
-            </div>
+
+        <div class="info-text">
+
+            Danışman:
+            @(ViewBag.Ogrenci != null &&
+                ViewBag.Ogrenci.Danisman != null
+                ? ViewBag.Ogrenci.Danisman.Kullanici.Ad + " " +
+                  ViewBag.Ogrenci.Danisman.Kullanici.Soyad
+                : "-")
+
         </div>
+
+        <div class="info-text">
+
+            Bölüm:
+            @(ViewBag.Ogrenci != null
+                ? ViewBag.Ogrenci.Bolum.Ad
+                : "-")
+
+        </div>
+
     </div>
 
-    <hr />
-    @Html.ActionLink("Çıkış Yap", "Logout", "Account", null, new { @class = "btn", style = "background-color: #7F1D1D; color: white;" })
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="panel-card">
+
+                <div class="panel-header">
+                    Ders Seçimi
+                </div>
+
+                <div class="panel-body">
+
+                    @Html.ActionLink(
+                        "Ders Seç",
+                        "DersSecim",
+                        "Ogrenci",
+                        null,
+                        new { @class = "panel-btn" })
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="panel-card">
+
+                <div class="panel-header">
+                    Seçilen Dersler
+                </div>
+
+                <div class="panel-body">
+
+                    @Html.ActionLink(
+                        "Derslerim",
+                        "SecilenDersler",
+                        "Ogrenci",
+                        null,
+                        new { @class = "panel-btn" })
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    @Html.ActionLink(
+        "Çıkış Yap",
+        "Logout",
+        "Account",
+        null,
+        new { @class = "logout-btn" })
+
 </div>

@@ -4,102 +4,341 @@
     ViewBag.Title = "Ders Seçimi";
 }
 
-<div class="container">
-    <div style="background-color: #0F172A; color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h2 style="margin: 0;">Ders Seçimi</h2>
+<style>
+
+    body {
+        background: radial-gradient(circle at top left, #dbeafe, #f1f5f9 40%), radial-gradient(circle at bottom right, #bfdbfe, #f8fafc 35%);
+        min-height: 100vh;
+    }
+
+    /* PAGE TITLE */
+
+    .page-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: #0F172A;
+        margin-bottom: 10px;
+        animation: fadeIn 0.7s ease;
+    }
+
+    /* INFO AREA */
+
+    .info-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        border-radius: 22px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+    }
+
+    .info-text {
+        font-size: 17px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 8px;
+    }
+
+    #toplam-kredi {
+        color: #2563EB;
+        font-size: 22px;
+    }
+
+    /* ALERT */
+
+    .alert {
+        border-radius: 14px;
+        margin-bottom: 18px;
+    }
+
+    /* TABLE CARD */
+
+    .table-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+        animation: fadeIn 0.7s ease;
+    }
+
+    /* TABLE */
+
+    .modern-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .modern-table thead {
+            background: linear-gradient(135deg,#0F172A,#172554);
+            color: white;
+        }
+
+        .modern-table th {
+            padding: 18px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .modern-table td {
+            padding: 18px;
+            color: #0F172A;
+            border-top: 1px solid rgba(203,213,225,0.7);
+        }
+
+        .modern-table tbody tr {
+            transition: 0.25s;
+        }
+
+            .modern-table tbody tr:hover {
+                background: rgba(219,234,254,0.35);
+            }
+
+    /* CHECKBOX */
+
+    .ders-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #0F172A;
+    }
+
+    /* BACK BUTTON */
+
+    .btn-back {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 12px 22px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        background: linear-gradient(135deg,#0F172A,#1E3A8A);
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+    }
+
+        .btn-back:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            background: linear-gradient(135deg,#172554,#2563EB);
+            box-shadow: 0 0 18px rgba(59,130,246,0.35), 0 14px 28px rgba(15,23,42,0.22);
+        }
+
+    /* ANIMATION */
+
+    @@keyframes fadeIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container" style="margin-top:40px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 class="page-title" style="margin: 0;">Ders Seçimi</h2>
+        @Html.ActionLink("Panele Dön", "Index", "Ogrenci", null, new { @class = "btn-back" })
     </div>
+    </h2>
 
     @if (ViewBag.Mesaj != null)
     {
-        <div class="alert alert-warning">@ViewBag.Mesaj</div>
+        <div class="alert alert-warning">
+            @ViewBag.Mesaj
+        </div>
     }
 
-    <div id="uyari-mesaj" style="display:none;" class="alert alert-danger"></div>
-    <div id="basari-mesaj" style="display:none;" class="alert alert-success"></div>
+    <div id="uyari-mesaj"
+         style="display:none;"
+         class="alert alert-danger">
+    </div>
 
-    <p><strong>Aktif Dönem:</strong> @(ViewBag.AktifDonem != null ? ViewBag.AktifDonem.Ad : "-")</p>
-    <p><strong>Toplam Kredi:</strong> <span id="toplam-kredi">0</span> / 30</p>
+    <div id="basari-mesaj"
+         style="display:none;"
+         class="alert alert-success">
+    </div>
 
-    <table class="table" style="border: 2px solid #0F172A; border-collapse: collapse;">
-        <thead>
-        <thead style="background-color: #0F172A; color: white;">
-            <tr>
-                <th>Seç</th>
-                <th>Ders Adı</th>
-                <th>Kredi</th>
-                <th>Kontenjan</th>
-                <th>Gün</th>
-                <th>Saat</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null)
-            {
-                foreach (var ders in Model)
+    <div class="info-card">
+
+        <div class="info-text">
+            Aktif Dönem:
+            @(ViewBag.AktifDonem != null
+                ? ViewBag.AktifDonem.Ad
+                : "-")
+        </div>
+
+        <div class="info-text">
+            Toplam Kredi:
+            <span id="toplam-kredi">0</span> / 30
+        </div>
+
+    </div>
+
+    <div class="table-card">
+
+        <table class="modern-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Seç</th>
+
+                    <th>Ders Adı</th>
+
+                    <th>Kredi</th>
+
+                    <th>Kontenjan</th>
+
+                    <th>Gün</th>
+
+                    <th>Saat</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model != null)
                 {
-                    var secili = ViewBag.SecilenDersIds != null && ((List<int>)ViewBag.SecilenDersIds).Contains(ders.Id);
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="ders-checkbox" data-ders-id="@ders.Id" data-kredi="@ders.Kredi" @(secili ? "checked" : "") />
-                        </td>
-                        <td>@ders.Ad</td>
-                        <td>@ders.Kredi</td>
-                        <td>@ders.Kontenjan</td>
-                        <td>@ders.Gun</td>
-                        <td>@ders.SaatBaslangic - @ders.SaatBitis</td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
+                    foreach (var ders in Model)
+                    {
+                        var secili =
+                            ViewBag.SecilenDersIds != null &&
+                            ((List<int>)ViewBag.SecilenDersIds).Contains(ders.Id);
 
-    <hr />
-    @Html.ActionLink("Panele Dön", "Index", "Ogrenci", null, new { @class = "btn", style = "background-color: #0F172A; color: white;" })
+                        <tr>
+
+                            <td>
+
+                                <input type="checkbox"
+                                       class="ders-checkbox"
+                                       data-ders-id="@ders.Id"
+                                       data-kredi="@ders.Kredi"
+                                       @(secili ? "checked" : "") />
+
+                            </td>
+
+                            <td>@ders.Ad</td>
+
+                            <td>@ders.Kredi</td>
+
+                            <td>@ders.Kontenjan</td>
+
+                            <td>@ders.Gun</td>
+
+                            <td>
+                                @ders.SaatBaslangic - @ders.SaatBitis
+                            </td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+   
+
 </div>
 
-<style>
-    .ders-checkbox:checked {
-        accent-color: #0F172A;
-    }
-</style>@section scripts {
+@section scripts {
+
     <script>
+
         $(document).ready(function () {
+
             hesaplaKredi();
 
             $('.ders-checkbox').change(function () {
+
                 var dersId = $(this).data('ders-id');
+
                 var checkbox = $(this);
 
                 $.ajax({
+
                     url: '@Url.Action("DersSecimYap", "Ogrenci")',
+
                     type: 'POST',
+
                     data: { dersId: dersId },
+
                     success: function (sonuc) {
+
                         if (sonuc.basari) {
-                            $('#basari-mesaj').text(sonuc.mesaj).show();
+
+                            $('#basari-mesaj')
+                                .text(sonuc.mesaj)
+                                .show();
+
                             $('#uyari-mesaj').hide();
+
                             hesaplaKredi();
-                            setTimeout(function () { $('#basari-mesaj').hide(); }, 3000);
-                        } else {
-                            $('#uyari-mesaj').text(sonuc.mesaj).show();
+
+                            setTimeout(function () {
+
+                                $('#basari-mesaj').hide();
+
+                            }, 3000);
+
+                        }
+                        else {
+
+                            $('#uyari-mesaj')
+                                .text(sonuc.mesaj)
+                                .show();
+
                             $('#basari-mesaj').hide();
-                            checkbox.prop('checked', !checkbox.prop('checked'));
+
+                            checkbox.prop(
+                                'checked',
+                                !checkbox.prop('checked'));
                         }
                     },
+
                     error: function () {
-                        $('#uyari-mesaj').text('Bir hata oluştu.').show();
-                        checkbox.prop('checked', !checkbox.prop('checked'));
+
+                        $('#uyari-mesaj')
+                            .text('Bir hata oluştu.')
+                            .show();
+
+                        checkbox.prop(
+                            'checked',
+                            !checkbox.prop('checked'));
                     }
                 });
             });
         });
 
         function hesaplaKredi() {
+
             var toplam = 0;
+
             $('.ders-checkbox:checked').each(function () {
+
                 toplam += parseInt($(this).data('kredi'));
+
             });
+
             $('#toplam-kredi').text(toplam);
         }
+
     </script>
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace Ders_Seçim_Sistemi.Controllers
 {
@@ -16,6 +17,12 @@ namespace Ders_Seçim_Sistemi.Controllers
 
             return View();
         }
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            Session.Abandon();
+            return RedirectToAction("Login", "Account");
+        }
         // Bölüm Listesi
         public ActionResult BolumListesi()
         {
@@ -29,7 +36,7 @@ namespace Ders_Seçim_Sistemi.Controllers
         // Bölüm Ekle - GET
         public ActionResult BolumEkle()
         {
-            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
+            if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")      
                 return RedirectToAction("Login", "Account");
 
             return View();
@@ -351,10 +358,23 @@ public ActionResult DersGuncelle(int id, string Ad, int? Kredi, int? Kontenjan, 
 
         // Öğrenci Ekle - POST
         [HttpPost]
-        public ActionResult OgrenciEkle(Kullanici kullanici, int BolumId, int DanismanId, string OgrenciNo)
+        public ActionResult OgrenciEkle(Kullanici kullanici, int? BolumId, int? DanismanId, string OgrenciNo)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
+
+            if (string.IsNullOrEmpty(kullanici.Ad) || string.IsNullOrEmpty(kullanici.Soyad) ||
+                string.IsNullOrEmpty(kullanici.Email) || string.IsNullOrEmpty(kullanici.Parola) ||
+                string.IsNullOrEmpty(OgrenciNo) || BolumId == null || DanismanId == null)
+            {
+                TempData["Hata"] = "Boş alanları doldurunuz.";
+                ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad");
+                ViewBag.DanismanId = new SelectList(
+                    db.Danismanlar.Include("Kullanici").ToList()
+                    .Select(d => new { Id = d.Id, AdSoyad = d.Kullanici.Ad + " " + d.Kullanici.Soyad }),
+                    "Id", "AdSoyad");
+                return View(kullanici);
+            }
 
             kullanici.Rol = "Ogrenci";
             db.Kullanicilar.Add(kullanici);
@@ -363,8 +383,8 @@ public ActionResult DersGuncelle(int id, string Ad, int? Kredi, int? Kontenjan, 
             var ogrenci = new Ogrenci
             {
                 KullaniciId = kullanici.Id,
-                BolumId = BolumId,
-                DanismanId = DanismanId,
+                BolumId = (int)BolumId,
+                DanismanId = (int)DanismanId,
                 OgrenciNo = OgrenciNo
             };
             db.Ogrenciler.Add(ogrenci);
@@ -393,14 +413,14 @@ public ActionResult DersGuncelle(int id, string Ad, int? Kredi, int? Kontenjan, 
             return RedirectToAction("OgrenciListesi");
         }
         // Öğrenci Güncelle - GET
-        public ActionResult OgrenciGuncelle(int id)
+        public ActionResult OgrenciGuncelle(int? id= null)
         {
             if (Session["Rol"] == null || Session["Rol"].ToString() != "Admin")
                 return RedirectToAction("Login", "Account");
 
             var ogrenci = db.Ogrenciler.Include("Kullanici").FirstOrDefault(o => o.Id == id);
             if (ogrenci == null)
-                return RedirectToAction("OgrenciListesi");
+                return RedirectToAction("Login", "Account");
 
             ViewBag.BolumId = new SelectList(db.Bolumler.ToList(), "Id", "Ad", ogrenci.BolumId);
             ViewBag.DanismanId = new SelectList(
@@ -420,7 +440,7 @@ public ActionResult DersGuncelle(int id, string Ad, int? Kredi, int? Kontenjan, 
 
             if (BolumId == null || DanismanId == null)
             {
-                TempData["Hata"] = "Lütfen tüm alanları doldurunuz.";
+                TempData["Hata"] = "Boş alanları doldurunuz.";
                 return RedirectToAction("OgrenciGuncelle", new { id = id });
             }
 

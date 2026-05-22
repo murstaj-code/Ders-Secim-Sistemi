@@ -2,98 +2,163 @@
     ViewBag.Title = "Giriş Yapınız";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Giriş Yapınız</title>
+<style>
 
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    body {
+        background: radial-gradient(circle at top left, #dbeafe, #f1f5f9 40%), radial-gradient(circle at bottom right, #bfdbfe, #f8fafc 35%);
+        min-height: 100vh;
+    }
 
-    <style>
+    /* CONTAINER */
 
-        body {
-            background-color: #f7f7f0;
+    .login-container {
+        max-width: 420px;
+        margin: 120px auto;
+    }
+
+    /* LOGIN KUTUSU */
+
+    .login-kutu {
+        width: 100%;
+        animation: loginAnim 0.7s ease;
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 30px;
+        padding: 42px;
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 40px rgba(15,23,42,0.10), inset 0 1px 1px rgba(255,255,255,0.7);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .login-kutu:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px rgba(59,130,246,0.10), 0 18px 45px rgba(15,23,42,0.14);
         }
 
-        /* ANA GİRİŞ KUTUSU */
-        .login-kutu {
-            border: 4px solid #0F172A;
-            border-radius: 12px;
-            padding: 30px;
-            background-color: #f7f7f0;
-            margin-top: 120px;
+    /* BAŞLIK */
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #0F172A;
+        font-weight: 800;
+        font-size: 34px;
+        line-height: 1.3;
+    }
+
+    /* LABEL */
+
+    label {
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* INPUT */
+
+    .login-kutu .form-control {
+        height: 52px;
+        border-radius: 14px;
+        border: 1px solid #CBD5E1;
+        background: rgba(255,255,255,0.85);
+        box-shadow: none;
+        font-size: 16px;
+        transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+
+        .login-kutu .form-control:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+            background: white;
+            outline: none;
         }
 
-            /* INPUT ÇERÇEVELER */
-            .login-kutu .form-control {
-                border: 2px solid #0F172A;
-                border-radius: 6px;
-            }
+    /* BUTTON */
 
-                .login-kutu .form-control:focus {
-                    border: 2px solid #0F172A;
-                    box-shadow: none;
-                }
+    .btn-login {
+        width: 100%;
+        height: 52px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg,#0F172A,#1E3A8A);
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+    }
 
-        label {
-            font-weight: 600;
-            color: #0F172A;
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(59,130,246,0.35), 0 14px 28px rgba(15,23,42,0.22);
+            background: linear-gradient(135deg,#172554,#2563EB);
         }
 
-        .login-title {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #0F172A;
-            font-weight: bold;
+    /* FADE IN */
+
+    @@keyframes loginAnim {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
-    </style>
 
-</head>
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 
-<body>
+<div class="login-container">
 
-    <div class="container" style="max-width:400px;">
+    <div class="login-kutu">
 
-        <div class="login-kutu">
+        <h3 class="login-title">
+            YÜ Ders Seçim Sistemi
+        </h3>
 
-            <h3 class="login-title">
-                YÜ Ders Seçim Sistemi - Giriş
-            </h3>
+        @if (ViewBag.Hata != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.Hata
+            </div>
+        }
 
-            @if (ViewBag.Hata != null)
-            {
-                <div class="alert alert-danger">@ViewBag.Hata</div>
-            }
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            <div class="form-group">
 
-            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
-            {
-                <div class="form-group">
-                    <label>E-posta</label>
-                    <input type="email"
-                           name="email"
-                           class="form-control"
-                           placeholder="E-posta" />
-                </div>
+                <label>E-posta</label>
 
-                <div class="form-group">
-                    <label>Parola</label>
-                    <input type="password"
-                           name="parola"
-                           class="form-control"
-                           placeholder="Parola" />
-                </div>
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       placeholder="E-posta" />
 
-                <button type="submit"
-                        class="btn btn-block"
-                        style="background-color:#0F172A;color:white;margin-top:10px;">
-                    Giriş Yapınız
-                </button>
-            }
+            </div>
 
-        </div>
+            <div class="form-group">
+
+                <label>Parola</label>
+
+                <input type="password"
+                       name="parola"
+                       class="form-control"
+                       placeholder="Parola" />
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-login">
+
+                Giriş Yap
+
+            </button>
+        }
 
     </div>
 
-</body>
-</html>
+</div>
